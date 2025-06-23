@@ -15,7 +15,7 @@ exports.login = async (req, res, next) => {
         const { numcin, password, remember  } = req.body
         // Validation des données reçues
         if (!numcin || !password) {
-            throw new AuthenticationError('Bad numcin or password', 400)
+            throw new AuthenticationError('Bad numcin or password ', 400)
         }
         // Vérification si l'utilisateur existe
         let user = await User.findOne({ where: {numcin: numcin}, include: Role})
