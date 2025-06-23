@@ -22,7 +22,7 @@ exports.login = async (req, res, next) => {
         // Vérification si l'utilisateur existe
         let user = await User.findOne({ where: {numcin: numcin}, include: Role})
         if(user === null){
-            throw new AuthenticationError('This account does not exists !', 404)
+            throw new AuthenticationError('This account does not exist !', 404)
         }        
         // Vérification du mot de passe
         let test = await User.checkPassword(password, user.password)
