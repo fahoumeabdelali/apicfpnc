@@ -78,7 +78,8 @@ DB.sequelize.authenticate()
     .then(() => console.log('Database connection OK'))
     .then(() => {
         app.listen(process.env.SERVER_PORT, '0.0.0.0', () => {
-            console.log(`This server is running on http://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}`)
+            // console.log(`This server is running on http://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}`)
+            console.log(`Server is running on port ${process.env.SERVER_PORT}`);
         })
     })
     .catch(err => console.log('Database connection Error', err))
