@@ -34,7 +34,6 @@ exports.getCondidat = async (req, res, next) => {
         if (condidat === null) {
             return res.status(404).json({ message: 'This condidat does not exist !' })
         }
-
         return res.json({ data: condidat })
     }catch(err){
         return res.status(500).json({ message: 'Database Error', error: err })
