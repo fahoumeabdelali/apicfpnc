@@ -1,4 +1,3 @@
-require("dotenv").config();
 /************************************/
 /*** Import des modules nécessaires */
 const { Sequelize } = require('sequelize')
