@@ -32,6 +32,7 @@ exports.login = async (req, res, next) => {
         }        
         // Génération du token et envoi
         const usrRoles = user.Roles.map(e => e.name)
+        console.log(usrRoles)
         let token = ''
         if(remember){
             token = jwt.sign({
