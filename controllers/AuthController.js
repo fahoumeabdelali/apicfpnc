@@ -31,8 +31,7 @@ exports.login = async (req, res, next) => {
             throw new AuthenticationError('Password wrong', 401)
         }        
         // Génération du token et envoi
-        const usrRoles = user.Roles.map(e => e.name)
-        console.log(usrRoles)
+        const usrRoles = user.Roles.map(e => e.name) //parcourrir les roles d'un user et les mettre dans un array on utilsant le principe de la relation
         let token = ''
         if(remember){
             token = jwt.sign({
