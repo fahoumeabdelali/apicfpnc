@@ -50,11 +50,10 @@ exports.login = async (req, res, next) => {
     token = jwt.sign(  { numcin: user.numcin, roles: usrRoles },process.env.JWT_SECRET )
     return res.json({
       token: token,
-        user: {
-          numcin: user.numcin,
-          roles: usrRoles,
-          permissions: uniquePermissions
-        }
+      numcin: user.numcin,
+      roles: usrRoles,
+      permissions: uniquePermissions
+    
     })
   } catch (err) {
     next(err)
