@@ -11,6 +11,25 @@ const User = DB.User
 const Role = DB.Role
 const Permission = DB.Permission
 
+//fonction qui rend un tableau imbrique non imbrique
+function flattenArray(arr) {
+  let flattened = [];
+
+  function flatten(item) {
+    if (Array.isArray(item)) {
+      for (let i = 0; i < item.length; i++) {
+        flatten(item[i]);
+      }
+    } else {
+      flattened.push(item);
+    }
+  }
+
+  flatten(arr);
+  return flattened;
+}
+
+
 exports.login = async (req, res, next) => {
   try {
     const { numcin, password, remember } = req.body
@@ -48,13 +67,14 @@ exports.login = async (req, res, next) => {
     // Génération du token et envoi
     const usrRoles = user.Roles.map(e => e.name) //parcourrir les roles d'un user et les mettre dans un array on utilsant le principe de la relation
     const usrPermissions = user.Roles.map(role => (role.Permissions || []).map(p => p.name))
+    const uniquePermissions = flattenArray(Array.from(usrPermissions))
     const token = jwt.sign({ numcin: user.numcin, roles: usrRoles, permissions: usrPermissions },process.env.JWT_SECRET)
     
     return res.json({
       token: token,
       numcin: user.numcin,
       roles: usrRoles,
-      permissions: usrPermissions
+      permissions: uniquePermissions
     })
     
   } catch (err) {
