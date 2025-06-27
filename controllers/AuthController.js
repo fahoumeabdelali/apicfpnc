@@ -19,18 +19,14 @@ exports.login = async (req, res, next) => {
       throw new AuthenticationError("Bad numcin or password", 400)
     }
     // Vérification si l'utilisateur existe
-    let user = await User.findOne({
-      where: { numcin: numcin },
+    const user = await User.findOne({
+      where: { numcin : numcin },
       include: [
         {
           model: Role,
-          include: [
-            {
-              model: Permission,
-            },
-          ],
-        },
-      ],
+          include: [Permission]
+        }
+      ]
     })
 
     if (user === null) {
