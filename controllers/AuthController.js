@@ -36,14 +36,19 @@ exports.login = async (req, res, next) => {
     if (user === null) {
       throw new AuthenticationError("This account does not exist !", 404)
     }
+
     // Vérification du mot de passe
     let test = await User.checkPassword(password, user.password)
     if (!test) {
       throw new AuthenticationError("Password wrong", 401)
     }
+
+    // Convertir en objet JS brut
+    const plainUser = user.get({ plain: true })
+
     // Génération du token et envoi
-    const usrRoles = user.Roles.map((e) => e.name) //parcourrir les roles d'un user et les mettre dans un array on utilsant le principe de la relation
-    const usrPermissions = user.Roles.flatMap(r => r.Permissions).map(p => p.name  )
+    const usrRoles = plainUser.Roles.map((e) => e.name) //parcourrir les roles d'un user et les mettre dans un array on utilsant le principe de la relation
+    const usrPermissions = plainUser.Roles.flatMap(r => r.Permissions).map(p => p.name  )
     const uniquePermissions = [...new Set(usrPermissions)] // ⚠️ Optionnel : supprimer les doublons si plusieurs rôles ont les mêmes permissions
     let token = ""
     token = jwt.sign(  { numcin: user.numcin, roles: usrRoles },process.env.JWT_SECRET )
