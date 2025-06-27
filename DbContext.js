@@ -2,23 +2,18 @@
 /*** Import des modules nécessaires */
 const { Sequelize } = require('sequelize')
 
-const databasehost = process.env.DB_HOST
-const databaseport = process.env.DB_PORT
-const databasename = process.env.DB_NAME
-const dbuser = process.env.DB_USER
-const dbpassword = process.env.DB_PASS
-
 
 
 /************************************/
 /*** Connexion à la base de données */
-let sequelize = new Sequelize( databasename, dbuser, dbpassword, { 
-    host: databasehost, 
-    port: databaseport,
-    dialect: 'mysql',
-    // desactivation de l'affichage dans la console des requettes sql générées par sequelize quand il s'agit de l'environement de production .
-    logging:  console.log
-    // logging: process.env.NODE_ENV === 'production' ? false : console.log
+let sequelize = new Sequelize(
+    process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        dialect: 'mysql',
+        // desactivation de l'affichage dans la console des requettes sql générées par sequelize quand il s'agit de l'environement de production .
+        logging:  console.log
+        // logging: process.env.NODE_ENV === 'production' ? false : console.log
     }
 )
 
@@ -28,18 +23,26 @@ const db = {}
 db.sequelize = sequelize
 
 db.User =                   require('./models/User')(sequelize)
-db.Condidat =               require('./models/Condidat')(sequelize)
 db.Role =                   require('./models/Role')(sequelize)
+db.Permission =             require('./models/Permission')(sequelize)
 db.UserRoles =              require('./models/UserRoles')(sequelize)
+db.RolePermission =         require('./models/RolePermission')(sequelize)
 
+db.Condidat =               require('./models/Condidat')(sequelize)
 
 
 db.User.belongsToMany(db.Role, {through: db.UserRoles })
 db.Role.belongsToMany(db.User, {through: db.UserRoles })
-db.User.hasMany(db.UserRoles)
-db.UserRoles.belongsTo(db.User)
-db.Role.hasMany(db.UserRoles)
-db.UserRoles.belongsTo(db.Role)
+
+
+db.Role.belongsToMany(db.Permission, {through: db.RolePermission })
+db.Permission.belongsToMany(db.Role, {through: db.RolePermission })
+
+
+// db.User.hasMany(db.UserRoles)
+// db.UserRoles.belongsTo(db.User)
+// db.Role.hasMany(db.UserRoles)
+// db.UserRoles.belongsTo(db.Role)
 
 
 db.User.hasOne(db.Condidat, {foreignKey: 'numcin'})
