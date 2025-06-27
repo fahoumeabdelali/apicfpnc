@@ -9,6 +9,7 @@ const { Op } = require("sequelize")
 
 const User = DB.User
 const Role = DB.Role
+const Permission = DB.Permission
 
 exports.login = async (req, res, next) => {
   try {
