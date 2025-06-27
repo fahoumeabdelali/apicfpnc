@@ -33,17 +33,20 @@ exports.login = async (req, res, next) => {
         // Génération du token et envoi
         const usrRoles = user.Roles.map(e => e.name) //parcourrir les roles d'un user et les mettre dans un array on utilsant le principe de la relation
         let token = ''
-        if(remember){
-            token = jwt.sign({
-                numcin: user.numcin,
-                roles:  usrRoles
-        }, process.env.JWT_SECRET)
-        }else{
-            token = jwt.sign({
-                numcin: user.numcin,
-                roles:  usrRoles
-            }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_DURING})
-        }
+        // if(remember){
+        //     token = jwt.sign({
+        //         numcin: user.numcin,
+        //         roles:  usrRoles
+        // }, process.env.JWT_SECRET)
+        // }else{
+        //     token = jwt.sign({
+        //         numcin: user.numcin,
+        //         roles:  usrRoles
+        //     }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_DURING})
+        // }
+        
+        token = jwt.sign({ numcin: user.numcin,roles: usrRoles  }, process.env.JWT_SECRET)        
+               
         return res.json({
             token: token,
             numcin: user.numcin, 
