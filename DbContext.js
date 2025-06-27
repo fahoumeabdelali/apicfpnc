@@ -12,8 +12,14 @@ let sequelize = new Sequelize(
         port: process.env.DB_PORT,
         dialect: 'mysql',
         // desactivation de l'affichage dans la console des requettes sql générées par sequelize quand il s'agit de l'environement de production .
-        logging:  console.log
+        logging:  console.log,
         // logging: process.env.NODE_ENV === 'production' ? false : console.log
+
+          dialectOptions: {
+                //  ceci  réduiT les logs de dépréciation
+                supportBigNumbers: true,
+                bigNumberStrings: true
+            },
     }
 )
 
