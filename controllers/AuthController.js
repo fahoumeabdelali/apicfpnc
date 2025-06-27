@@ -20,11 +20,15 @@ exports.login = async (req, res, next) => {
     }
     // Vérification si l'utilisateur existe
     const user = await User.findOne({
-      where: { numcin : numcin },
+      where: { numcin },
       include: [
         {
           model: Role,
-          include: [Permission]
+          include: [
+            {
+              model: Permission
+            }
+          ]
         }
       ]
     })
@@ -42,16 +46,17 @@ exports.login = async (req, res, next) => {
 
 
     // Génération du token et envoi
-    const usrRoles = user.Roles.map((e) => e.name) //parcourrir les roles d'un user et les mettre dans un array on utilsant le principe de la relation
-    const usrPermissions = usrRoles.flatMap(r => r.Permissions).map(p => p.name  )
-    const uniquePermissions = [...new Set(usrPermissions)] // ⚠️ Optionnel : supprimer les doublons si plusieurs rôles ont les mêmes permissions
+    const usrRoles = user.Roles.map(e => e.name) //parcourrir les roles d'un user et les mettre dans un array on utilsant le principe de la relation
+    const usrPermissions = user.Roles.map(role => (role.Permissions || []).map(p => p.name))
+     
+   
     let token = ""
-    token = jwt.sign(  { numcin: user.numcin, roles: usrRoles },process.env.JWT_SECRET )
+    token = jwt.sign(  { numcin: user.numcin, roles: usrRoles, permissions: usrPermissions },process.env.JWT_SECRET )
     return res.json({
       token: token,
       numcin: user.numcin,
       roles: usrRoles,
-      permissions: uniquePermissions
+      permissions: usrPermissions
     
     })
   } catch (err) {
