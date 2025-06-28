@@ -67,7 +67,7 @@ exports.login = async (req, res, next) => {
     // Génération du token et envoi
     const usrRoles = user.Roles.map(e => e.name) //parcourrir les roles d'un user et les mettre dans un array on utilsant le principe de la relation
     const usrPermissions = user.Roles.map(role => (role.Permissions || []).map(p => p.name))
-    const uniquePermissions = [...new Set(flattenArray(usrPermissions))]
+    const uniquePermissions = flattenArray(usrPermissions)
 
     const token = jwt.sign({ numcin: user.numcin, roles: usrRoles, permissions: usrPermissions },process.env.JWT_SECRET)
     
